@@ -12,6 +12,7 @@
     "apollo-link-http": "^1.5.16",
     "apollo-link-ws": "^1.0.19",
     "color": "^3.1.2",
+    "dotenv": "^8.2.0",
     "graphql": "^14.6.0",
     "graphql-tag": "^2.10.3",
     "nodemon": "^2.0.2",
@@ -29,7 +30,8 @@
     "build-js": "react-scripts build",
     "build": "npm-run-all build:css build-js",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prod": "serve build -s"
   },
   "eslintConfig": {
     "extends": "react-app"
