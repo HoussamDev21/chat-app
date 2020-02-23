@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import MessageItem from './MessageItem'
 import Avatar from './common/Avatar'
 import gql from 'graphql-tag'
@@ -23,16 +23,44 @@ const MESSAGES = gql`query ($username: String!) {
 const auth = JSON.parse(localStorage.getItem('user'))
 
 export default function Messages ({ user }) {
-    const { data: firstData, loading: firstLoading, error: firstError } = useQuery(MESSAGES, { variables: { username: user.username }})
-    const { data, loading, error } = useSubscription(NEW_MESSAGE_SUBSCRIPTION, { variables: { participants: [ user.username, auth.username ] }})
+
+    const [messages, setMessages] = useState([])
     
-    if (firstLoading) {
+    const { loading, error } = useQuery(MESSAGES, { 
+        variables: { username: user.username },
+        onCompleted: (data) => {
+            setMessages(data.messages)
+        }
+    })
+
+    useSubscription(NEW_MESSAGE_SUBSCRIPTION, { 
+        variables: { participants: [ user.username, auth.username ] },
+        onSubscriptionData: ({ subscriptionData: { data }}) => {
+            let list = [ data.newMessage, ... messages ]
+            setMessages(list)
+        }
+    })
+
+    const groupedByUser = () => {
+        return messages.reduce((all, item, index) => {
+            const groupIndex = (() => {
+                if (index === 0) return 0
+                else if (messages[index - 1].sender.username === item.sender.username) return all.length - 1
+                else return all.length
+            })()
+            if (!all[groupIndex]) {
+                all[groupIndex] = []
+            }
+            all[groupIndex].unshift(item)
+            return all
+        }, [])
+    }
+    
+    if (loading) {
         return <div className="flex-grow flex justify-center items-center text-blue-400">error</div>
     }
     
-    const messages = firstData.messages
-
-    if (error || firstError) {
+    if (error) {
         return <div className="flex-grow flex justify-center items-center text-blue-400">error</div>
     }
 
@@ -45,33 +73,14 @@ export default function Messages ({ user }) {
         </div>
     }
 
-    if (data) {
-        messages.unshift(data.newMessage)
-    }
-
-    const groupedByUser = messages.reduce((all, item, index) => {
-        const groupIndex = (() => {
-            if (index === 0) return 0
-            else if (messages[index - 1].sender.username === item.sender.username) return all.length - 1
-            else return all.length
-        })()
-        if (!all[groupIndex]) {
-            all[groupIndex] = []
-        }
-        all[groupIndex].unshift(item)
-        return all
-    }, [])
-
-    return <div className="flex-grow flex flex-col-reverse p-3 bg-white">
-        {groupedByUser.map((group, groupIndex) => {
-            return <div key={groupIndex} className="flex items-start mb-2">
-                {group[0].sender.username !== auth.username && <div className="mr-2 sticky top-0">
-                    <Avatar className="w-8 h-8" user={group[0].sender} />
-                </div>}
-                <div className="flex-grow">
-                    {group.map((m, i) => <MessageItem key={i} item={m} />)}
-                </div>
-            </div>         
-        })}
-    </div>
+    return groupedByUser().map((group, groupIndex) => {
+        return <div key={groupIndex} className="flex items-start mb-2">
+            {group[0].sender.username !== auth.username && <div className="mr-2 sticky top-0">
+                <Avatar className="w-8 h-8" user={group[0].sender} />
+            </div>}
+            <div className="flex-grow">
+                {group.map((m, i) => <MessageItem key={i} item={m} />)}
+            </div>
+        </div>   
+    })
 }

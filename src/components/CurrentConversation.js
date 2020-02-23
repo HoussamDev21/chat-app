@@ -22,11 +22,15 @@ export default function CurrentConversation () {
         </div>
     }
 
-    return <div className="rounded-lg border border-primary-200 overflow-y-auto h-full flex flex-col-reverse">
-        <div className="flex-grow flex flex-col" key={user.username}>
-            <CurrentConversationHeader user={user} />
+    return <div 
+        key={user.username} 
+        className="rounded-lg border border-primary-200 h-full flex flex-col"
+    >
+        <CurrentConversationHeader user={user} />
+        <div className="flex-grow flex flex-col-reverse py-2 px-3 bg-white overflow-y-auto">
             <Messages user={user} />
-            <MessageForm user={user} />
-        </div> 
+            <div><div className="h-3"></div></div>
+        </div>
+        <MessageForm user={user} />
     </div>
 }

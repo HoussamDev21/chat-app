@@ -55,9 +55,9 @@ export default function Menu () {
                 <div className="border-t border-primary-200 my-3"></div>
                 <div className="uppercase font-semibold text-gray-500 text-xs mb-2">mode</div>
                 <div className="flex">
-                    <div onClick={() => MyEvent.emit('change-mode', 'light')} className={`light px-3 py-1 leading-none border border-black rounded-full text-black bg-white cursor-pointer`}>light</div>
-                    <div className="w-2"></div>
-                    <div onClick={() => MyEvent.emit('change-mode', 'dark')} className={`light px-3 py-1 leading-none border border-white rounded-full text-white bg-black cursor-pointer`}>dark</div>
+                    <div onClick={() => MyEvent.emit('change-mode', 'light')} className="light px-3 py-1 leading-none border border-black rounded-full text-black bg-white cursor-pointer uppercase text-xs">light</div>
+                    <div className="w-1"></div>
+                    <div onClick={() => MyEvent.emit('change-mode', 'dark')} className="light px-3 py-1 leading-none border border-white rounded-full text-white bg-black cursor-pointer uppercase text-xs">dark</div>
                 </div>
             </div>
             <div className="p-3 bg-white border-t border-b border-primary-200">
