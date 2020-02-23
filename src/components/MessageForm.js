@@ -23,7 +23,7 @@ export default function MessageForm ({ user }) {
             className="relative flex"
             onSubmit={event => {
                 event.preventDefault()
-                if (content) {
+                if (content.trim()) {
                     sendMessage({ variables: { content, receiver: user.username }})
                     setContent('')
                 }
