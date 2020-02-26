@@ -18,7 +18,7 @@ export default function MessageForm ({ user }) {
     const [content, setContent] = useState('')
     const [sendMessage] = useMutation(SEND_MESSAGE)
 
-    return <div className="p-3 rounded-b-lg border-t-2 border-primary-100 sticky bottom-0 z-10 bg-white">
+    return <div className="p-3 border-t-2 border-primary-100 sticky bottom-0 z-10 bg-white">
         <form 
             className="relative flex"
             onSubmit={event => {

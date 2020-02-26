@@ -1,6 +1,6 @@
 import React from 'react'
 import Avatar from './common/Avatar'
-import MyEvent from '../Services/MyEvent'
+import MyEvent from '../services/MyEvent'
 
 const user = JSON.parse(localStorage.getItem('user'))
 

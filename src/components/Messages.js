@@ -36,7 +36,7 @@ export default function Messages ({ user }) {
     useSubscription(NEW_MESSAGE_SUBSCRIPTION, { 
         variables: { participants: [ user.username, auth.username ] },
         onSubscriptionData: ({ subscriptionData: { data }}) => {
-            let list = [ data.newMessage, ... messages ]
+            let list = [ data.newMessage, ...messages ]
             setMessages(list)
         }
     })
@@ -65,7 +65,7 @@ export default function Messages ({ user }) {
     }
 
     if (!messages.length && loading) {
-        return <div className="flex-grow h-full flex flex-col justify-center items-center text-primary-300 bg-white">
+        return <div className="flex-grow h-full flex flex-col justify-center items-center text-primary-500 bg-white">
             <div className="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center mb-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width={30} height={30} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="feather feather-edit-2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" /></svg>
             </div>

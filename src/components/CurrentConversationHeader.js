@@ -2,7 +2,7 @@ import React from 'react'
 import Avatar from './common/Avatar'
 
 export default function CurrentConversationHeader ({ user }) {
-    return <div className="p-3 rounded-t-lg border-b-2 border-primary-100 sticky top-0 z-10 bg-white">
+    return <div className="p-3 border-b-2 border-primary-100 sticky top-0 z-10 bg-white">
         <div className="relative flex justify-between">
             <div className="flex items-center">
                 <div className="mr-3">

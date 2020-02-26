@@ -2,7 +2,7 @@ import React from 'react'
 import Avatar from './common/Avatar'
 import gql from 'graphql-tag'
 import { useQuery, useSubscription } from '@apollo/react-hooks'
-import MyEvent from '../Services/MyEvent'
+import MyEvent from '../services/MyEvent'
 
 const ONLINE_USERS = gql`query {
     onlineUsers {

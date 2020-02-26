@@ -10,7 +10,7 @@ export default function Avatar (props) {
     return <div className={`rounded-full overflow-hidden ${className}`}>
         {!!user.photo
             ? <img className="w-full h-full object-cover" src={user.photo} alt={user.username} />
-            : <div className="w-full h-full bg-primary-300 flex items-center justify-center text-white leading-none uppercase font-semibold">
+            : <div className="w-full h-full bg-primary-500 flex items-center justify-center text-white leading-none uppercase font-semibold">
                 {(user.username || '')[0]}
             </div>
         }

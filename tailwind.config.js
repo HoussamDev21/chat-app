@@ -32,7 +32,7 @@ module.exports = {
     variants: {
         backgroundColor: ['hover', 'focus', 'focus-within'],
         boxShadow: ['hover', 'focus', 'focus-within'],
-        borderColor: ['last', 'focus'],
+        borderColor: ['last', 'focus', 'focus-within'],
         margin: ['last'],
     },
     plugins: [],

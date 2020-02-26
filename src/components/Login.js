@@ -10,7 +10,7 @@ export default function Login () {
         window.location = ''
     }
 
-    return <div className="container mx-auto py-5 h-screen">
+    return <div className="bg-white mx-auto py-5 h-screen">
         <div className="flex justify-center">
             <form
                 className="w-1/4 mt-24"
