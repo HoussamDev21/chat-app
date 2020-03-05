@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from 'react'
 import Menu from './Menu'
 import MenuHeader from './MenuHeader'
-import Users from './Users'
+import OnlineUsers from './OnlineUsers'
+import Conversations from './Conversations'
 import SearchInput from './SearchInput'
 import CurrentConversation from './CurrentConversation'
-import Login from './Login'
+import Authentication from './Authentication'
 import MyEvent from '../services/MyEvent'
 import colorVariants from '../helpers/colorVariants'
 import colors from '../constants/colors'
+import { useQuery } from 'react-apollo'
+import gql from 'graphql-tag'
+import { useDispatch } from 'react-redux'
 
-let user = JSON.parse(localStorage.getItem('user'))
+const ME_QUERY = gql`{
+    me {
+        id
+        username
+    }
+}`
 
 if (!localStorage.getItem('themeColor')) {
     localStorage.setItem('themeColor', colors.hues[0])
@@ -38,22 +47,33 @@ function setCSSColors() {
 }
 
 export default function Main () {
+    const dispatch = useDispatch()
+    const { data, loading } = useQuery(ME_QUERY)
     const [themeMode, setThemeMode] = useState(localStorage.getItem('themeMode'))
+    const [tab, setTab] = useState('online-users')
 
     useEffect(() => {
         setCSSColors()
-        MyEvent.listen('change-theme-color', () => {
+        MyEvent.listen('change-theme-color', (val) => {
+            localStorage.setItem('themeColor', val)
             setCSSColors()
         })
         MyEvent.listen('change-theme-mode', (val) => {
+            localStorage.setItem('themeMode', val)
             setThemeMode(val)
             setCSSColors()
         })
     }, [])
 
-    if (!user) return <div className={`${themeMode} text-gray-700`}><Login /></div>
+    if (loading) return null
 
-    else return <div className={`${themeMode} bg-primary-100 text-gray-700`}>
+    if (!data.me) {
+        localStorage.removeItem('token')
+        return <div className={`${themeMode} text-gray-700`}><Authentication /></div>
+    }
+    else dispatch({ type: 'account/SET_USER', user: data.me })
+
+    return <div className={`${themeMode} bg-primary-100 text-gray-700`}>
         <div className="mx-auto container px-2 h-screen select-none" style={{ minWidth: '1000px' }}>
             <div className="h-full flex border-r border-l border-primary-200">
                 <div className="w-4/12">
@@ -64,7 +84,12 @@ export default function Main () {
                             </div>
                             <SearchInput />
                         </div>
-                        <Users />
+                        <div className="flex border-b border-primary-100 p-3">
+                            <button className={`w-1/2 text-center leading-none p-2 text-xs uppercase font-semibold text-gray-500 ${tab === 'online-users' ? 'bg-primary-100 text-primary-500' : ''} rounded-full`} onClick={() => setTab('online-users')}>online users</button>
+                            <button className={`w-1/2 text-center leading-none p-2 text-xs uppercase font-semibold text-gray-500 ${tab === 'conversations' ? 'bg-primary-100 text-primary-500' : ''} rounded-full`} onClick={() => setTab('conversations')}>conversations</button>
+                        </div>
+                        {tab === 'online-users' && <OnlineUsers />}
+                        {tab === 'conversations' && <Conversations />}
                         <Menu />
                     </div>
                 </div>

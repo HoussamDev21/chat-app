@@ -2,23 +2,24 @@ import React, { useState, useEffect } from 'react'
 import Avatar from './common/Avatar'
 import MyEvent from '../services/MyEvent'
 import colors from '../constants/colors'
+import { useSelector } from 'react-redux'
+import gql from 'graphql-tag'
+import { useMutation } from 'react-apollo'
 
-const user = JSON.parse(localStorage.getItem('user'))
+const LOGOUT = gql`mutation { logout }`
 
 export default function Menu () {
+    const user = useSelector(state => state.account.user)
     const [visibility, setVisibility] = useState(false)
     const [themeColor, setThemeColor] = useState(localStorage.getItem('themeColor'))
+    const [logout] = useMutation(LOGOUT)
 
     useEffect(() => {
         MyEvent.listen('display-menu', (val) => {
             setVisibility(val)
         })
         MyEvent.listen('change-theme-color', (val) => {
-            localStorage.setItem('themeColor', val)
             setThemeColor(val)
-        })
-        MyEvent.listen('change-theme-mode', (val) => {
-            localStorage.setItem('themeMode', val)
         })
     }, [])
 
@@ -67,14 +68,13 @@ export default function Menu () {
             <div className="p-3 bg-white border-t border-b border-primary-200">
                 <button 
                     className="text-primary-500 text-sm"
-                    onClick={() => {
-                        localStorage.removeItem('user')
-                        localStorage.removeItem('theme')
-                        localStorage.removeItem('mode')
+                    onClick={async () => {
+                        await logout()
+                        localStorage.removeItem('token')
                         window.location = ''
                     }}
                 >
-                    signout
+                    logout
                 </button>
             </div>
         </div>

@@ -5,3 +5,17 @@
 * {
     outline: none !important;
 }
+
+.input {
+    @apply px-3 py-2 leading-none bg-gray-100 rounded-lg w-full border border-gray-200;
+    &:focus {
+        @apply border-primary-400 bg-white;
+    }
+}
+
+.button {
+    @apply px-3 py-2 leading-none bg-primary-500 text-white font-semibold rounded-lg w-full uppercase;
+    &:hover {
+        @apply bg-primary-600;
+    }
+}

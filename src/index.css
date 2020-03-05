@@ -10727,6 +10727,42 @@ video {
   outline: none !important;
 }
 
+.input {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  line-height: 1;
+  background-color: var(--gray-100);
+  border-radius: 0.5rem;
+  width: 100%;
+  border-width: 1px;
+  border-color: var(--gray-200);
+}
+
+.input:focus {
+  border-color: var(--primary-400);
+  background-color: var(--white);
+}
+
+.button {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  line-height: 1;
+  background-color: var(--primary-500);
+  color: var(--white);
+  font-weight: 600;
+  border-radius: 0.5rem;
+  width: 100%;
+  text-transform: uppercase;
+}
+
+.button:hover {
+  background-color: var(--primary-600);
+}
+
 @media (min-width: 640px) {
   .sm\:sr-only {
     position: absolute;

@@ -1,20 +1,26 @@
 import React from 'react'
 import Avatar from './common/Avatar'
+import { useSelector } from 'react-redux'
 
-export default function CurrentConversationHeader ({ user }) {
+export default function CurrentConversationHeader ({ conversation }) {
+    const user = useSelector(state => state.account.user)
+    const receiver = () => {
+        return conversation.participants.filter(u => u.id !== user.id)[0]
+    }
+
     return <div className="p-3 border-b-2 border-primary-100 sticky top-0 z-10 bg-white">
         <div className="relative flex justify-between">
             <div className="flex items-center">
                 <div className="mr-3">
-                    <Avatar user={user} className="w-8 h-8" src="https://images.pexels.com/photos/3569566/pexels-photo-3569566.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" />
+                    <Avatar user={receiver()} className="w-8 h-8" src="https://images.pexels.com/photos/3569566/pexels-photo-3569566.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" />
                 </div>
                 <div>
                     <span className="text-sm font-semibold">
-                        {user.username}
+                        {receiver().username}
                     </span>
                     &nbsp;
                     <span className="text-sm">
-                        @{user.username}
+                        @{receiver().username}
                     </span>
                 </div>
             </div>

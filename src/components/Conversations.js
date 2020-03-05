@@ -1,105 +1,33 @@
 import React from 'react'
 import ConversationItem from './ConversationItem'
+import { useQuery } from 'react-apollo'
+import gql from 'graphql-tag'
 
-const data = [
-    {
-        avatar: 'https://images.pexels.com/photos/3569566/pexels-photo-3569566.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-        title: 'Amy',
-        updated_at: '11:45',
-        message: {
-            body: 'hello',
+const CONVERSATIONS = gql`{
+    conversations {
+        id
+        created_at
+        participants {
+            id
+            username
         }
-    },
-    {
-        avatar: 'https://images.pexels.com/photos/3588650/pexels-photo-3588650.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-        title: 'Ali',
-        updated_at: '10:23',
-        message: {
-            body: 'hello',
-        }
-    },
-    {
-        avatar: 'https://images.pexels.com/photos/3476402/pexels-photo-3476402.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-        title: 'Mohammed',
-        updated_at: '9:00',
-        message: {
-            body: 'hello',
-        }
-    },
-    {
-        avatar: 'https://images.pexels.com/photos/3577339/pexels-photo-3577339.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-        title: 'Sara',
-        updated_at: 'yesterday 17:34',
-        message: {
-            body: 'hello',
-        }
-    },
-    {
-        avatar: 'https://images.pexels.com/photos/3569566/pexels-photo-3569566.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-        title: 'Amy',
-        updated_at: '11:45',
-        message: {
-            body: 'hello',
-        }
-    },
-    {
-        avatar: 'https://images.pexels.com/photos/3588650/pexels-photo-3588650.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-        title: 'Ali',
-        updated_at: '10:23',
-        message: {
-            body: 'hello',
-        }
-    },
-    {
-        avatar: 'https://images.pexels.com/photos/3476402/pexels-photo-3476402.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-        title: 'Mohammed',
-        updated_at: '9:00',
-        message: {
-            body: 'hello',
-        }
-    },
-    {
-        avatar: 'https://images.pexels.com/photos/3577339/pexels-photo-3577339.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-        title: 'Sara',
-        updated_at: 'yesterday 17:34',
-        message: {
-            body: 'hello',
-        }
-    },
-    {
-        avatar: 'https://images.pexels.com/photos/3569566/pexels-photo-3569566.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-        title: 'Amy',
-        updated_at: '11:45',
-        message: {
-            body: 'hello',
-        }
-    },
-    {
-        avatar: 'https://images.pexels.com/photos/3588650/pexels-photo-3588650.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-        title: 'Ali',
-        updated_at: '10:23',
-        message: {
-            body: 'hello',
-        }
-    },
-    {
-        avatar: 'https://images.pexels.com/photos/3476402/pexels-photo-3476402.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-        title: 'Mohammed',
-        updated_at: '9:00',
-        message: {
-            body: 'hello',
-        }
-    },
-    {
-        avatar: 'https://images.pexels.com/photos/3577339/pexels-photo-3577339.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500',
-        title: 'Sara',
-        updated_at: 'yesterday 17:34',
-        message: {
-            body: 'hello',
-        }
-    },
-]
+    }
+}`
 
 export default function Conversations () {
-    return data.map((c, i) => <ConversationItem key={i} item={c} />)
+    let { data, loading, error } = useQuery(CONVERSATIONS)
+
+    if (loading) {
+        return <div className="p-3 text-center text-gray-500">Loading ...</div>
+    }
+    
+    if (error) {
+        return 'error'
+    }
+
+    if (!data.conversations.length) {
+        return <div className="p-3 text-center text-gray-500">No conversations yet !</div>
+    }
+
+    return data.conversations.map((c) => <ConversationItem key={c.id} item={c} />)
 }

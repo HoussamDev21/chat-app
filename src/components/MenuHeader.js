@@ -1,10 +1,11 @@
 import React from 'react'
 import Avatar from './common/Avatar'
 import MyEvent from '../services/MyEvent'
-
-const user = JSON.parse(localStorage.getItem('user'))
+import { useSelector } from 'react-redux'
 
 export default function MenuHeader () {
+    const user = useSelector(state => state.account.user)
+
     return <div className="flex justify-between">
         <div className="flex">
             <div className="mr-3">

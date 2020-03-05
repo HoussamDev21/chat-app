@@ -2,19 +2,18 @@ import React, { useState } from 'react'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
 
-const SEND_MESSAGE = gql`mutation ($content: String!, $receiver: String!){
-    sendMessage(content: $content, receiver: $receiver) {
+const SEND_MESSAGE = gql`mutation ($content: String!, $conversation_id: ID!){
+    sendMessage(content: $content, conversation_id: $conversation_id) {
         content
-        sender {
-            username
-        }
-        receiver {
+        created_at
+        user {
+            id
             username
         }
     }
 }`
 
-export default function MessageForm ({ user }) {
+export default function MessageForm ({ conversation }) {
     const [content, setContent] = useState('')
     const [sendMessage] = useMutation(SEND_MESSAGE)
 
@@ -24,7 +23,7 @@ export default function MessageForm ({ user }) {
             onSubmit={event => {
                 event.preventDefault()
                 if (content.trim()) {
-                    sendMessage({ variables: { content, receiver: user.username }})
+                    sendMessage({ variables: { content, conversation_id: conversation.id }})
                     setContent('')
                 }
             }}

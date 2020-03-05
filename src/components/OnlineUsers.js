@@ -3,22 +3,24 @@ import Avatar from './common/Avatar'
 import gql from 'graphql-tag'
 import { useQuery, useSubscription } from '@apollo/react-hooks'
 import MyEvent from '../services/MyEvent'
+import { useSelector } from 'react-redux'
 
 const ONLINE_USERS = gql`query {
     onlineUsers {
+        id
         username
     }
 }`
 
 const ONLINE_USERS_SUBSCRIPTION = gql`subscription {
     onlineUsers {
+        id
         username
     }
 }`
 
-const user = JSON.parse(localStorage.getItem('user'))
-
-export default function Conversations () {
+export default function OnlineUsers () {
+    const user = useSelector(state => state.account.user)
     const { data: firstData, loading: firstLoading, error: firstError} = useQuery(ONLINE_USERS)
     const { data, loading, error } = useSubscription(ONLINE_USERS_SUBSCRIPTION)
 
@@ -36,10 +38,10 @@ export default function Conversations () {
 
     return (data || firstData).onlineUsers
     .filter(u => u.username !== user.username)
-    .map(user => <div 
-        key={user.username} 
+    .map(user => <div
+        key={user.username}
         className="p-3 border-b border-primary-100 last:border-transparent hover:bg-primary-100 cursor-pointer"
-        onClick={() => MyEvent.emit('start-conversation', user)}
+        onClick={() => MyEvent.emit('start-conversation', user.id)}
     >
         <div className="flex items-center">
             <div className="mr-3">

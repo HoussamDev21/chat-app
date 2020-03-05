@@ -1,11 +1,11 @@
 import React from 'react'
-
-let user = JSON.parse(localStorage.getItem('user'))
+import { useSelector } from 'react-redux'
 
 export default function MessageItem (props) {
+    const user = useSelector(state => state.account.user)
     const { item } = props
 
-    const isAuthMessage = item.sender.username === user.username
+    const isAuthMessage = item.user.username === user.username
 
     return <div className={`flex mb-1 last:mb-0 ${ isAuthMessage ? 'justify-end' : '' }`}>
         <div style={{ maxWidth: '60%' }}>
