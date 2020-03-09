@@ -16,6 +16,7 @@
     "graphql-tag": "^2.10.3",
     "immer": "^5.3.6",
     "nodemon": "^2.0.2",
+    "pubsub-js": "^1.8.0",
     "react": "^16.12.0",
     "react-apollo": "^3.1.3",
     "react-dom": "^16.12.0",
@@ -33,7 +34,7 @@
     "build": "npm-run-all build:css build-js",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "prod": "PORT=80 serve build -s"
+    "prod": "pm2 start 'PORT=4001 serve build -s' --name=chat-app"
   },
   "eslintConfig": {
     "extends": "react-app"

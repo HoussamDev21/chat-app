@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Avatar from './common/Avatar'
 import gql from 'graphql-tag'
 import { useQuery, useSubscription } from '@apollo/react-hooks'
-import MyEvent from '../services/MyEvent'
+import PubSub from 'pubsub-js'
 import { useSelector } from 'react-redux'
 
 const ONLINE_USERS = gql`query {
@@ -12,8 +12,15 @@ const ONLINE_USERS = gql`query {
     }
 }`
 
-const ONLINE_USERS_SUBSCRIPTION = gql`subscription {
-    onlineUsers {
+const USER_CONNECTED = gql`subscription {
+    userConnected {
+        id
+        username
+    }
+}`
+
+const USER_DISCONNECTED = gql`subscription {
+    userDisconnected {
         id
         username
     }
@@ -21,27 +28,52 @@ const ONLINE_USERS_SUBSCRIPTION = gql`subscription {
 
 export default function OnlineUsers () {
     const user = useSelector(state => state.account.user)
-    const { data: firstData, loading: firstLoading, error: firstError} = useQuery(ONLINE_USERS)
-    const { data, loading, error } = useSubscription(ONLINE_USERS_SUBSCRIPTION)
+    const { loading, error } = useQuery(ONLINE_USERS, {
+        onCompleted: (data) => {
+            setOnlineUsers(data.onlineUsers)
+        }
+    })
+    const [onlineUsers, setOnlineUsers] = useState([])
 
-    if (loading && firstLoading) {
+    useSubscription(USER_CONNECTED, {
+        onSubscriptionData: ({ subscriptionData: { data }}) => {
+            let index = onlineUsers.findIndex(u => u.id === data.userConnected.id)
+            if (index === -1) {
+                let list = [ data.userConnected, ...onlineUsers ]
+                setOnlineUsers(list)
+            }
+        }
+    })
+
+    useSubscription(USER_DISCONNECTED, { 
+        onSubscriptionData: ({ subscriptionData: { data }}) => {
+            let index = onlineUsers.findIndex(u => u.id === data.userDisconnected.id)
+            if (index > -1) {
+                let list = [...onlineUsers]
+                list.splice(index, 1)
+                setOnlineUsers(list)
+            }
+        }
+    })
+
+    if (loading) {
         return <div className="p-3 text-center text-gray-500">Loading ...</div>
     }
     
-    if (error || firstError) {
+    if (error) {
         return 'error'
     }
 
-    if (!(data || firstData).onlineUsers.length) {
+    if (!onlineUsers.length) {
         return <div className="p-3 text-center text-gray-500">No users yet !</div>
     }
 
-    return (data || firstData).onlineUsers
+    return onlineUsers
     .filter(u => u.username !== user.username)
     .map(user => <div
         key={user.username}
         className="p-3 border-b border-primary-100 last:border-transparent hover:bg-primary-100 cursor-pointer"
-        onClick={() => MyEvent.emit('start-conversation', user.id)}
+        onClick={() => PubSub.publish('start-conversation', user.id)}
     >
         <div className="flex items-center">
             <div className="mr-3">

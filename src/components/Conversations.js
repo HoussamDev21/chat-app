@@ -10,6 +10,12 @@ const CONVERSATIONS = gql`{
         participants {
             id
             username
+        },
+        lastMessage {
+            id
+            content
+            created_at
+            user_id
         }
     }
 }`

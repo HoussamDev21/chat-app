@@ -6,7 +6,7 @@ import Conversations from './Conversations'
 import SearchInput from './SearchInput'
 import CurrentConversation from './CurrentConversation'
 import Authentication from './Authentication'
-import MyEvent from '../services/MyEvent'
+import PubSub from 'pubsub-js'
 import colorVariants from '../helpers/colorVariants'
 import colors from '../constants/colors'
 import { useQuery } from 'react-apollo'
@@ -50,15 +50,16 @@ export default function Main () {
     const dispatch = useDispatch()
     const { data, loading } = useQuery(ME_QUERY)
     const [themeMode, setThemeMode] = useState(localStorage.getItem('themeMode'))
-    const [tab, setTab] = useState('online-users')
+    // const [tab, setTab] = useState('online-users')
+    const [tab, setTab] = useState('conversations')
 
     useEffect(() => {
         setCSSColors()
-        MyEvent.listen('change-theme-color', (val) => {
+        PubSub.subscribe('change-theme-color', (_, val) => {
             localStorage.setItem('themeColor', val)
             setCSSColors()
         })
-        MyEvent.listen('change-theme-mode', (val) => {
+        PubSub.subscribe('change-theme-mode', (_, val) => {
             localStorage.setItem('themeMode', val)
             setThemeMode(val)
             setCSSColors()

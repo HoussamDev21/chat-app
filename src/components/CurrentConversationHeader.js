@@ -19,9 +19,9 @@ export default function CurrentConversationHeader ({ conversation }) {
                         {receiver().username}
                     </span>
                     &nbsp;
-                    <span className="text-sm">
+                    {/* <span className="text-sm">
                         @{receiver().username}
-                    </span>
+                    </span> */}
                 </div>
             </div>
             <div className="flex items-center text-primary-500">

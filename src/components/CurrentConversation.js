@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import CurrentConversationHeader from './CurrentConversationHeader'
 import MessageForm from './MessageForm'
 import Messages from './Messages'
-import MyEvent from '../services/MyEvent'
+import PubSub from 'pubsub-js'
 import { useQuery } from 'react-apollo'
 import gql from 'graphql-tag'
 
@@ -29,8 +29,8 @@ export default function CurrentConversation () {
     })
 
     useEffect(() => {
-        MyEvent.listen('start-conversation', user_id => setUserId(user_id))
-        MyEvent.listen('open-conversation', c => setConversation(c))
+        PubSub.subscribe('start-conversation', (_, user_id) => setUserId(user_id))
+        PubSub.subscribe('open-conversation', (_, c) => setConversation(c))
     }, [])
 
     if (loading) {
