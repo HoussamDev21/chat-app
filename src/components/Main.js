@@ -50,8 +50,7 @@ export default function Main () {
     const dispatch = useDispatch()
     const { data, loading } = useQuery(ME_QUERY)
     const [themeMode, setThemeMode] = useState(localStorage.getItem('themeMode'))
-    // const [tab, setTab] = useState('online-users')
-    const [tab, setTab] = useState('conversations')
+    const [tab, setTab] = useState('online-users')
 
     useEffect(() => {
         setCSSColors()
